@@ -26,8 +26,7 @@ func (headers Headers) GetValueByKey(key string) (string, error) {
 }
 
 func (headers Headers) Json() ([]byte, error) {
-	result, err := json.Marshal(headers.headersMap)
-	return result, err
+	return json.Marshal(headers.headersMap)
 }
 
 func getHttpHeaders(socket syscall.Handle) map[string]string {

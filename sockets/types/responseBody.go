@@ -1,7 +1,9 @@
 package types
 
 import (
+	"encoding/json"
 	"fmt"
+	"golearning/sockets/types/apitypes"
 	"syscall"
 )
 
@@ -38,4 +40,34 @@ func getRawBody(socket syscall.Handle) []byte {
 	}
 
 	return bodyData
+}
+
+func (body ResponseBody) Text() string {
+	return string(body.RawData)
+}
+
+func (body ResponseBody) Json() ([]byte, error) {
+	var indexOfStart int
+	var indexOfEnd int
+	text := body.Text()
+
+	for index, value := range text {
+		if string(value) == "[" || string(value) == "{" {
+			indexOfStart = index
+			break
+		}
+	}
+	for i := len(text) - 1; i >= 0; i-- {
+		if string(text[i]) == "]" || string(text[i]) == "}" {
+			indexOfEnd = i
+			break
+		}
+	}
+
+	usersArr := make([]apitypes.User, 0)
+	err := json.Unmarshal(body.RawData[indexOfStart:indexOfEnd+1], &usersArr)
+	if err != nil {
+		fmt.Println("Error while unmarshal:", err)
+	}
+	return json.Marshal(usersArr)
 }
