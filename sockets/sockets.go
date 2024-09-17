@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
-	request "golearning/sockets/types/request"
-	response "golearning/sockets/types/response"
-	socket "golearning/sockets/types/socket"
-	utils "golearning/sockets/utils"
+	"golearning/sockets/types"
+	"golearning/sockets/types/common"
+	"golearning/sockets/utils"
 	"syscall"
 )
 
@@ -15,12 +14,12 @@ const (
 )
 
 func main() {
-	sock := socket.NewSocket(serverIp, port).GetSock()
+	sock := types.NewSocket(serverIp, port).GetSock()
 	defer syscall.Closesocket(sock)
 	defer syscall.WSACleanup()
 
-	request.NewRequest(sock, "GET /comments HTTP/1.1\nHost: jsonplaceholder.typicode.com\nConnection: close\n\n")
-	res := response.NewResponse(sock)
+	types.NewRequest(sock, "GET /comments HTTP/1.1\nHost: jsonplaceholder.typicode.com\nConnection: close\n\n")
+	res := common.NewResponse(sock)
 	headersJson, err := res.Headers.Json()
 	if err != nil {
 		fmt.Println("Error while parsing headers into json:", err)

@@ -1,18 +1,19 @@
-package reponse
+package common
 
 import (
 	"fmt"
-	headers "golearning/sockets/types/headers"
+	"golearning/sockets/types"
 	"strings"
 	"syscall"
 )
 
 type Response struct {
-	Headers headers.Headers
+	Headers types.Headers
+	Body    types.ResponseBody
 }
 
 func NewResponse(socket syscall.Handle) Response {
-	responseHeaders := headers.NewHeaders(getHttpHeaders(socket))
+	responseHeaders := types.NewHeaders(getHttpHeaders(socket))
 	return Response{Headers: responseHeaders}
 }
 
